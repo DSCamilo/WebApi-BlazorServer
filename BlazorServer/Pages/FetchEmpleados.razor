@@ -1,0 +1,73 @@
+﻿@page "/fetchempleados"
+
+
+@using BlazorServer.Models
+@using BlazorServer.Services
+@inject IEmpleadoService _empleadoService
+
+<div class="card">
+
+    <div class="card-header">
+        <h1>Empleados - List</h1>
+    </div>
+
+    <div class="card-body">
+        @if (empleados.Count == 0)
+        {
+            <button class="btn btn-primary" type="button" disabled>
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                <span class="visually-hidden">Loading...</span>
+            </button>
+        }
+        else
+        {
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Apellido</th>
+                        <th>Nombre</th>
+                        <th>Genero</th>
+                        <th>Titulo</th>
+                        <th>Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var empleado in empleados)
+                    {
+                       <tr>
+                            <td>@empleado.Emp_Id</td>
+                            <td>@empleado.Last_Name</td>
+                            <td>@empleado.First_Name</td>
+                            <td>@empleado.Gender</td>
+                            <td>@empleado.Title</td>
+                            <th><button type="button" class="btn btn-danger">Eliminar</button></th>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+
+@code {
+    private List<Empleado> empleados = new List<Empleado>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        empleados = await _empleadoService.getEmpleados();
+    }
+
+     /*public async Task Delete(int id)
+        {
+            var sqlQuery = $"DELETE from Empleados WHERE Emp_Id={id}";
+
+            using (var connection = new SqliteConnection(_connectionString))
+            {
+                await connection.ExecuteAsync(sqlQuery);
+            }
+        }*/
+
+    
+}
